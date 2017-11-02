@@ -1,1 +1,0 @@
-# Neural-Structural-Correspondence-Learning-for-Domain-Adaptation
