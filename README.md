@@ -7,8 +7,9 @@ If you use this implementation in your article, please [cite](https://scholar.go
 
 
 
-You can find detailed instructions for the AE-SCL and AE-SCL-SR models in run.py which located in their corresponding directories.
+You can find detailed instructions for the AE-SCL and AE-SCL-SR models(including Prerequisites) in their corresponding directories.
 
+You can find an explained example in model_name\run.py,
 e.g., AE-SCL-SR\run.py : 
 
 ```python
