@@ -24,6 +24,7 @@ after you run the experiments.
 If you wish to run the program on a gpu device you should use the  THEANO_FLAGS=device=gpu,floatX=float32 python run.py command
 
 DATA
+Don't forget to unzip dvdUN.rar in data\dvd.
 the scripts assume a XML file (like blitzer provides in his website, with less attributes) in the following structure:
 <reviews>
 <review>
