@@ -3,9 +3,15 @@ Authors: Yftah Ziser, Roi Reichart (Technion - Israel Institute of Technology).
 
 This is a code repository used to generate the results appearing in [Neural Structural Correspondence Learning for Domain Adaptation](https://www.aclweb.org/anthology/K/K17/K17-1040.pdf).
 
-If you use this implementation in your article, please [cite](https://scholar.googleusercontent.com/scholar.bib?q=info:Yx8aXGO5-S4J:scholar.google.com/&output=citation&scisig=AAGBfm0AAAAAWfu7n6Rd5ZXgGBPFTcbVqaCGO27Z7n5p&scisf=4&ct=citation&cd=-1&hl=iw) :)
-
-
+If you use this implementation in your article, please cite :)
+```bib
+@article{ziser2016neural,
+  title={Neural Structural Correspondence Learning for Domain Adaptation},
+  author={Ziser, Yftah and Reichart, Roi},
+  journal={arXiv preprint arXiv:1610.01588},
+  year={2016}
+}
+```
 
 You can find detailed instructions for the AE-SCL and AE-SCL-SR models(including Prerequisites) in their corresponding directories.
 
