@@ -65,8 +65,9 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
 
     weight_str = src + "_to_" + dest + "/weights/w_" + src + "_" + dest + "_" + str(pivot_num) + "_" + str(
         pivot_min_st) + "_" + str(dim)+".npy"
+    #gets the model weights 
     mat= np.load(weight_str)
-
+    #gets the encoder as the transformation function
     mat = mat[0]
 
     filename = src + "_to_" + dest + "/split/"
@@ -84,7 +85,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
             test_target = pickle.load(f)
 
     unlabeled, source, target = XML2arrayRAW("data/" + src + "/" + src + "UN.txt","data/" + dest + "/" + dest + "UN.txt")
-
+    #we add the train to the unlabeled list in order to get good vectorizer
     unlabeled = source + train+ target
 
 
@@ -103,6 +104,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
     bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=20, binary=True)
     X_2_train = bigram_vectorizer.fit_transform(trainSent).toarray()
     X_2_test_unlabeld = bigram_vectorizer_unlabeled.transform(trainSent).toarray()
+    #delete the pivots from the training matrix 
     XforREP = np.delete(X_2_test_unlabeld, pivotsCounts, 1)  # delete second column of C
 
     rep = XforREP.dot(mat)
@@ -119,14 +121,14 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
 
     allfeatures = np.concatenate((X_2_train, rep), axis=1)
 
-
+    lbl_num = 1000
     dest_test, source, target = XML2arrayRAW("data/"+dest+"/negative.parsed","data/"+dest+"/positive.parsed")
-    dest_test_target= [0]*1000+[1]*1000
+    dest_test_target= [0]*lbl_num+[1]*lbl_num
     X_dest = bigram_vectorizer.transform(dest_test).toarray()
     X_2_test = bigram_vectorizer_unlabeled.transform(dest_test).toarray()
     XforREP_dest = np.delete(X_2_test, pivotsCounts, 1)  # delete second column of C
     rep_for_dest = XforREP_dest.dot(mat)
-    allfeaturesKitchen = np.concatenate((X_dest, rep_for_dest), axis=1)
+    allfeatures = np.concatenate((X_dest, rep_for_dest), axis=1)
 
 
 
@@ -141,7 +143,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
 
     logreg.fit(allfeatures, train_target)
 
-    lg = logreg.score(allfeaturesKitchen, dest_test_target)
+    lg = logreg.score(allfeatures, dest_test_target)
     log_dev_all = logreg.score(devAllFeatures,test_target)
 
 
@@ -155,13 +157,13 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
     filename = src+"_to_"+dest+"/"+"results/"+src+"_to_"+dest
     if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
+
     sentence = "pivot num = " + str(pivot_num) + " , min freq = " + str(pivot_min_st) + " dim = " + str(
         dim) + " result = " + str(lg) + " c_parm = " + str(c_parm)
     print sentence
 
     with open(filename, "a") as myfile:
         myfile.write(sentence+"\n")
-
 
 
 
