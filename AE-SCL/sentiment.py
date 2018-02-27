@@ -128,7 +128,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
     X_2_test = bigram_vectorizer_unlabeled.transform(dest_test).toarray()
     XforREP_dest = np.delete(X_2_test, pivotsCounts, 1)  # delete second column of C
     rep_for_dest = XforREP_dest.dot(mat)
-    allfeatures = np.concatenate((X_dest, rep_for_dest), axis=1)
+    allfeaturesFinal = np.concatenate((X_dest, rep_for_dest), axis=1)
 
 
 
@@ -143,7 +143,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
 
     logreg.fit(allfeatures, train_target)
 
-    lg = logreg.score(allfeatures, dest_test_target)
+    lg = logreg.score(allfeaturesFinal, dest_test_target)
     log_dev_all = logreg.score(devAllFeatures,test_target)
 
 
