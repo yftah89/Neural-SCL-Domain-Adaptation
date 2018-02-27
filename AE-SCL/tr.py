@@ -1,17 +1,13 @@
-
-
-
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.optimizers import SGD
 import pre
-
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
 import os
-
 import numpy as np
-
+from numpy.random import seed
+seed(1)
 
 
 
