@@ -76,10 +76,10 @@ def preproc(pivot_num,pivot_min_st,src,dest):
     pivotsCounts= []
     unlabeled = []
     names = []
-    #if the split is not already exists, extract it, oterwise, load an existin one.
+    #if the split is not already exists, extract it, otherwise, load an existing one.
     filename = src + "_to_" + dest + "/split/"
     if not os.path.exists(os.path.dirname(filename)):
-        #gets all the train and test for sentiment classification
+        #gets the dev set and train set for sentiment classification
         train, train_target, test, test_target = extract_and_split("data/"+src+"/negative.parsed","data/"+src+"/positive.parsed")
     #loads an existing split
     else:
@@ -115,7 +115,7 @@ def preproc(pivot_num,pivot_min_st,src,dest):
 
     bigram_vectorizer_target = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=20, binary=True)
     X_2_train_target = bigram_vectorizer_target.fit_transform(target).toarray()
-    #get a sorted list of pivots with respect to the MI with the label
+    #gets a sorted list of pivots with respect to the MI with the label
     MIsorted,RMI=GetTopNMI(2000,CountVectorizer,X_2_train,train_target)
     MIsorted.reverse()
     c=0
@@ -126,7 +126,7 @@ def preproc(pivot_num,pivot_min_st,src,dest):
 
         s_count = getCounts(X_2_train_source,bigram_vectorizer_source.get_feature_names().index(name)) if name in bigram_vectorizer_source.get_feature_names() else 0
         t_count = getCounts(X_2_train_target, bigram_vectorizer_target.get_feature_names().index(name)) if name in bigram_vectorizer_target.get_feature_names() else 0
-        #pivot must meet 2 conditions, to have high MI with the label and appear at least k time in the source and target domains
+        #pivot must meet 2 conditions, to have high MI with the label and appear at least pivot_min_st times in the source and target domains
         if(s_count>=pivot_min_st and t_count>=pivot_min_st):
             names.append(name)
             pivotsCounts.append(bigram_vectorizer_unlabeled.get_feature_names().index(name))
@@ -135,7 +135,7 @@ def preproc(pivot_num,pivot_min_st,src,dest):
         i+=1
 
 
-    #now we take out fifth of the training data for validation(with respect to the represantation learning task)
+    #takes out fifth of the training data for validation(with respect to the represantation learning task)
     source_valid = len(source)/5
     target_valod = len(target)/5
     c=0
