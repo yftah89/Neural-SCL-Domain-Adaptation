@@ -19,12 +19,8 @@ import numpy as np
 def train(src,dest,pivot_num,pivot_min_st,dim):
     outputs = pivot_num
     HUs =dim
+    #get the representation learning training and vlidation data
     x, y, x_valid, y_valid,inputs= pre.preproc(pivot_num,pivot_min_st,src,dest)
-
-
-
-    #mat= np.load("kw.npy")
-    #print "the shape is ",mat[0].shape
 
     model = Sequential()
     model.add(Dense(HUs,input_shape=(inputs,),init='glorot_normal'))
@@ -37,8 +33,9 @@ def train(src,dest,pivot_num,pivot_min_st,dim):
 
     model.compile(optimizer=sgd, loss='binary_crossentropy')
 
-
+    #stops as soon as the validaion loss stops decreasing
     earlyStopping = EarlyStopping(monitor='val_loss', patience=0, mode='min')
+    #saveing only the best model
     save_best = ModelCheckpoint("best_model", monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
 
     h=model.fit(x, y, batch_size=1,callbacks=[earlyStopping],nb_epoch=10,validation_data=(x_valid,y_valid), shuffle=True)
@@ -47,6 +44,6 @@ def train(src,dest,pivot_num,pivot_min_st,dim):
     filename = weight_str
     if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
-
+    #saving the entire model
     np.save(weight_str, model.get_weights())
 
