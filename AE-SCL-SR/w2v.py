@@ -95,6 +95,7 @@ def XML2arrayRAW_org(neg_path, pos_path):
     return reviews,negReviews,posReviews
 
 def makeFileForWord2Vec(src, dest,pivot_num,pivot_min_st):
+    #making a file for the entire raw data minus the target labeled data, which we can't use  
     unigram, bigram = getStopWords(src, dest,pivot_num,pivot_min_st)
     reviews_labels_neg = XML2arrayRAW("data/"+src+"/negative.parsed")
     reviews_labels_pos = XML2arrayRAW("data/" + src + "/positive.parsed")
@@ -136,12 +137,7 @@ class MySentences(object):
 
 
 def wo2ve(src,dest,pivot_num,pivot_min_st,dim):
-   # makeFileForWord2Vec("data/dvd/dvdUN.txt","un_dvd")
-  #  makeFileForWord2Vec("data/electronics/electronicsUN.txt","un_electronics")
-  #  makeFileForWord2Vec("data/kitchen/kitchenUN.txt","un_kitchen")
-   # makeFileForWord2Vec("data/books/booksUN.txt","un_books")
     makeFileForWord2Vec(src,dest,pivot_num,pivot_min_st)
-
 
     filename = src + "_to_" + dest + "/" + "W2V/w2v_" + src + "_" + dest + "_" + str(pivot_num) + "_" + str(
         pivot_min_st)
@@ -187,14 +183,4 @@ def wo2ve(src,dest,pivot_num,pivot_min_st,dim):
         pickle.dump(pivot_mat, f)
 
 
-'''
-   quick_new_model = gensim.models.Word2Vec.load('_quick_mymodel')
-   print quick_new_model.similarity('recommended', 'suggest')
-   print quick_new_model.similarity('woman', 'horse')
-   print new_model.most_similar(positive=['woman', 'king'], negative=['man'], topn=10)
-   print quick_new_model.most_similar(positive=['woman', 'king'], negative=['man'], topn=10)
-   model = word2vec.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
-   print model.most_similar(positive=['woman', 'king'], negative=['man'], topn=10)
 
-   #model.save_word2vec_format('GoogleNews-vectors-negative300.txt', binary=False)
-   '''
