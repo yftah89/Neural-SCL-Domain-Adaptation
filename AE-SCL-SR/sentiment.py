@@ -104,7 +104,7 @@ def sent(src,dest,pivot_num,pivot_min_st,dim,c_parm):
     bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=20, binary=True)
     X_2_train = bigram_vectorizer.fit_transform(trainSent).toarray()
     X_2_test_unlabeld = bigram_vectorizer_unlabeled.transform(trainSent).toarray()
-    #delete the pivots from the training matrix 
+    #delete the pivots from the test matrix 
     XforREP = np.delete(X_2_test_unlabeld, pivotsCounts, 1)  # delete second column of C
 
     rep = XforREP.dot(mat)
