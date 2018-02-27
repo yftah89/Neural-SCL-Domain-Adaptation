@@ -76,11 +76,12 @@ def preproc(pivot_num,pivot_min_st,src,dest):
     pivotsCounts= []
     unlabeled = []
     names = []
-
+    #if the split is not already exists, extract it, oterwise, load an existin one.
     filename = src + "_to_" + dest + "/split/"
     if not os.path.exists(os.path.dirname(filename)):
         #gets all the train and test for sentiment classification
         train, train_target, test, test_target = extract_and_split("data/"+src+"/negative.parsed","data/"+src+"/positive.parsed")
+    #loads an existing split
     else:
         with open(src + "_to_" + dest + "/split/train", 'rb') as f:
             train = pickle.load(f)
@@ -114,7 +115,7 @@ def preproc(pivot_num,pivot_min_st,src,dest):
 
     bigram_vectorizer_target = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=20, binary=True)
     X_2_train_target = bigram_vectorizer_target.fit_transform(target).toarray()
-
+    #get a sorted list of pivots with respect to the MI with the label
     MIsorted,RMI=GetTopNMI(2000,CountVectorizer,X_2_train,train_target)
     MIsorted.reverse()
     c=0
@@ -125,30 +126,27 @@ def preproc(pivot_num,pivot_min_st,src,dest):
 
         s_count = getCounts(X_2_train_source,bigram_vectorizer_source.get_feature_names().index(name)) if name in bigram_vectorizer_source.get_feature_names() else 0
         t_count = getCounts(X_2_train_target, bigram_vectorizer_target.get_feature_names().index(name)) if name in bigram_vectorizer_target.get_feature_names() else 0
+        #pivot must meet 2 conditions, to have high MI with the label and appear at least k time in the source and target domains
         if(s_count>=pivot_min_st and t_count>=pivot_min_st):
             names.append(name)
             pivotsCounts.append(bigram_vectorizer_unlabeled.get_feature_names().index(name))
             c+=1
-            if(c<200):
-                print "feature is ",name," it MI is ",RMI[MIsorted[i]]," in source ",s_count," in target ",t_count
+            print "feature is ",name," it MI is ",RMI[MIsorted[i]]," in source ",s_count," in target ",t_count
         i+=1
 
 
-
+    #now we take out fifth of the training data for validation(with respect to the represantation learning task)
     source_valid = len(source)/5
     target_valod = len(target)/5
     c=0
     y = X_2_train_unlabeled[:,pivotsCounts]
-    print "old x is ", X_2_train_unlabeled.shape
     x =np.delete(X_2_train_unlabeled, pivotsCounts, 1)  # delete second column of C
-    print "new x is ", x.shape
-    #taking 1500 from books and 4000 from kitchen
     x_valid=np.concatenate((x[:source_valid][:], x[-target_valod:][:]), axis=0)
 
     x = x[source_valid:-target_valod][:]
 
 
-    # taking 1500 from books and 4000 from kitchen
+    #we take fifth of the source examples and fifth of the target examples to keep the same ratio in validation
     y_valid = np.concatenate((y[:source_valid][:], y[-target_valod:][:]), axis=0)
 
     y = y[source_valid:-target_valod][:]
@@ -177,7 +175,7 @@ def preproc(pivot_num,pivot_min_st,src,dest):
         pickle.dump(pivotsCounts, f)
 
 
-
+    #finally, we return the training and validation data, there is not test data since we do not care about the test in the representation learning task
     return x,y,x_valid,y_valid,x.shape[1]
 
 
