@@ -7,9 +7,8 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
 import os
 import numpy as np
-
-
-
+from numpy.random import seed
+seed(1)
 
 
 def train(src,dest,pivot_num,pivot_min_st,dim):
