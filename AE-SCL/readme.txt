@@ -1,10 +1,7 @@
-AE-SCL-SR
+AE-SCL
 This algorithm is used to find a shared low dimentional representation in order to overcome the domain adaptation problem
 you can read more ealborated explanation in the article "Neural Structural Correspondence Learning for Domain Adaptation".
  
-
-
-
 
 INSTALLATION
 
